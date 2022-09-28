@@ -1,0 +1,141 @@
+@charset "utf-8";
+@import '../node_modules/bulma/bulma.sass';
+@import './reset';
+@import './mixin';
+
+$purple: #8a4d76;
+$pink: #fa7c91;
+$brown: #757763;
+$beige-light: #d0d1cd;
+$beige-lighter: #eff0eb;
+
+$family-sans-serif: 'Nunito', sans-serif;
+$grey-dark: $brown;
+$grey-light: $beige-light;
+$primary: $purple;
+$link: $pink;
+$widescreen-enabled: false;
+$fullhd-enabled: false;
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: bisque;
+  width: 15%;
+  height: 800px;
+}
+
+main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-left: 15%;
+  height: 1200px;
+
+  .voidArea {
+    height: 200px;
+  }
+  .btnArea {
+    width: 70%;
+    text-align: right;
+    margin-bottom: 50px;
+    .button {
+      @include btnStyle;
+    }
+  }
+
+  table {
+    width: 70%;
+    tr {
+      th {
+        font-weight: 900;
+        text-align: center;
+      }
+
+      td {
+        & ~ .amount {
+          text-align: right;
+        }
+        & ~ .description {
+          width: 40%;
+          text-align: center;
+        }
+
+        & ~ .delete {
+          margin: 10px 0 0 10px;
+        }
+      }
+      &:hover :not(th, span) {
+        background-color: #f30f3d74;
+      }
+    }
+  }
+  .modalOverlay {
+    position: absolute;
+    width: 100%;
+    height: 1200px;
+    top: 0;
+    left: 0;
+    background-color: black;
+    opacity: 0.4;
+    z-index: 1;
+  }
+  .modals {
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 60%;
+    background-color: white;
+    transform: translate(-50%, -80%);
+    z-index: 2;
+    .delete {
+      display: block;
+    }
+    div {
+      margin: 0 0 40px 0;
+      &:first-child {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+        align-items: flex-end;
+        span {
+          margin: 10px 10px 0 0;
+        }
+      }
+    }
+    .button {
+      @include btnStyle;
+    }
+  }
+}
+
+.cost {
+  color: red;
+}
+
+.revenue {
+  color: blue;
+}
+
+.hidden {
+  display: none;
+}
+
+// Import a Google Font
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+
+@import '../node_modules/bulma/sass/utilities/_all.sass';
+@import '../node_modules/bulma/sass/base/_all.sass';
+@import '../node_modules/bulma/sass/elements/button.sass';
+@import '../node_modules/bulma/sass/elements/container.sass';
+@import '../node_modules/bulma/sass/elements/title.sass';
+@import '../node_modules/bulma/sass/form/_all.sass';
+@import '../node_modules/bulma/sass/components/navbar.sass';
+@import '../node_modules/bulma/sass/layout/hero.sass';
+@import '../node_modules/bulma/sass/layout/section.sass';

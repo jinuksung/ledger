@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/signIn.css" />
+  </head>
+  <body>
+    <header>가계뿌</header>
+    <main>
+      <form id="signUpForm" name="signUpForm">
+        <div class="field">
+          <label for="email" class="email">Email</label>
+          <div class="control">
+            <input class="input" type="email" name="email" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="password" class="password">Password</label>
+          <div class="control">
+            <input class="input" id="password" type="password" name="password" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="confirmPassword" class="password">Confirm Password</label>
+          <div class="control">
+            <input class="input" id="confirmPassword" type="password" name="confirmPassword" />
+          </div>
+        </div>
+        <button type="submit" class="button is-primary is-hovered">Register</button>
+      </form>
+      <a href="./signIn.html"><span>Go back to Login</span></a>
+    </main>
+  </body>
+  <script type="module" src=" ./signUp.js"></script>
+  <script type="module" src=" ./supabase.js"></script>
+</html>

@@ -1,0 +1,52 @@
+@charset "utf-8";
+@import '../node_modules/bulma/bulma.sass';
+@import './reset';
+@import './mixin';
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  header {
+    margin: 40px 0 0 0;
+  }
+  main {
+    margin: 100px 0 0 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    #signInForm,
+    #signUpForm {
+      font-size: 20px;
+      width: 30%;
+      height: 100%;
+    }
+    a {
+      display: block;
+      margin: 40px 0 0 0;
+    }
+    .passwordCheckSpan {
+      color: red;
+      font-size: 12px;
+    }
+    .notification {
+      margin-top: 20px;
+      font-size: 14px;
+      p {
+        font-weight: 800;
+      }
+      span {
+        display: block;
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+.hidden {
+  display: none;
+}
