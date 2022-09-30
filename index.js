@@ -44,6 +44,9 @@ async function loadLedgerList() {
         console.log('ledgerList :', ledgerListArray);
         ledgerListArray.forEach((ledgerList) => {
           ledger.push(...ledgerList.body);
+          ledger.sort(function (a, b) {
+            return a.id - b.id;
+          });
         });
         return ledger;
       })
