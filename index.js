@@ -2,8 +2,7 @@ import { supabase } from './supabase.js';
 
 const main = document.querySelector('main');
 const ledgerSelectModal = document.querySelector('#ledgerSelectModal');
-const ledgerSelectModalOverlay = document.querySelector('#ledgerSelectModalOverlay');
-const table = document.querySelector('table');
+const ledgerTable = document.querySelector('#ledgerTable');
 const registerBtn = document.querySelector('#registerBtn');
 const modalOverlay = document.querySelector('.modalOverlay');
 const registerForm = document.registerForm;
@@ -14,7 +13,13 @@ const closeModalBtn = document.querySelector('.closeModal');
 let ledgerId = null;
 let currentUser = null;
 
-loadLedgerList();
+console.log(JSON.parse(localStorage.getItem('supabase.auth.token')));
+
+if (!sessionStorage.currentLedgerId) {
+  loadLedgerList();
+} else {
+  fetchData(sessionStorage.currentLedgerId);
+}
 
 //database에서 로그인한 사용자가 사용 중인 가계부 목록 조회하여 보여주는 함수
 async function loadLedgerList() {
@@ -73,7 +78,8 @@ async function loadLedgerList() {
           const { target } = e;
           ledgerId = target.parentElement.firstElementChild.textContent;
           ledgerSelectModal.classList.add('hidden');
-          ledgerSelectModalOverlay.classList.add('hidden');
+          modalOverlay.classList.add('hidden');
+          sessionStorage.currentLedgerId = ledgerId;
           fetchData(ledgerId);
         });
 
@@ -95,6 +101,8 @@ async function loadLedgerList() {
         `
           )
           .join('');
+        modalOverlay.classList.remove('hidden');
+        ledgerSelectModal.classList.remove('hidden');
         ledgerSelectTable.insertAdjacentHTML('beforeend', ledgerListRow);
         ledgerSelectModal.insertAdjacentElement('beforeend', ledgerSelectTable);
       });
@@ -189,6 +197,33 @@ async function fetchData(ledgerId) {
     const { data, error } = await supabase.from('ledger_detail').select('*').eq('ledger_id', ledgerId);
     if (data) {
       console.log('data:', data);
+      const tableHeader = `
+      <tr>
+          <th>날짜</th>
+          <th>통장</th>
+          <th>수익/비용</th>
+          <th>상세</th>
+          <th>금액</th>
+          <th>내용</th>
+          <th>작성자</th>
+        </tr>
+      `;
+      // const tableRow = data.map((datum) => ledgerLoad(datum)).join('');
+      // const tableRow = data
+      //   .map(
+      //     (datum) =>
+      //       `<tr id="${datum.id}">
+      //     <td>${datum.date.slice(5, 7)}/${datum.date.slice(8, 10)}</td>
+      //     <td>${datum.account}</td>
+      //     <td>${datum.typeOne}</td>
+      //     <td>${datum.typeTwo}</td>
+      //     <td>${datum.amount}</td>
+      //     <td>${datum.description}</td>
+      //     <td>${datum.writer}</td>
+      //   </tr>`
+      //   )
+      //   .join('');
+      ledgerTable.insertAdjacentHTML('afterbegin', tableHeader);
       data.forEach((datum) => ledgerLoad(datum));
     } else if (error) {
       const { message } = error;
@@ -201,7 +236,7 @@ async function fetchData(ledgerId) {
 
 //모델에서 데이터 불러와서 화면에 뿌려주는 함수
 function ledgerLoad(data) {
-  const { id, date, account, typeOne, typeTwo, description, amount } = data;
+  const { id, date, account, typeOne, typeTwo, description, amount, writer } = data;
   const tableRow = document.createElement('tr');
   const dateCell = document.createElement('td');
   const accountCell = document.createElement('td');
@@ -209,20 +244,23 @@ function ledgerLoad(data) {
   const typeTwoCell = document.createElement('td');
   const amountCell = document.createElement('td');
   const descriptionCell = document.createElement('td');
+  const writerCell = document.createElement('td');
   tableRow.className = id;
   amountCell.classList.add('amount');
   descriptionCell.classList.add('description');
+  writerCell.classList.add('writer');
   dateCell.textContent = `${date.slice(5, 7)}/${date.slice(8, 10)}`;
   accountCell.textContent = account;
   typeOneCell.textContent = typeOne;
   typeTwoCell.textContent = typeTwo;
   amountCell.textContent = amount.toLocaleString('KO-KR');
   descriptionCell.textContent = description;
+  writerCell.textContent = writer;
 
   revenueOrCost(amountCell, typeOneCell);
 
-  table.append(tableRow);
-  tableRow.append(dateCell, accountCell, typeOneCell, typeTwoCell, amountCell, descriptionCell);
+  tableRow.append(dateCell, accountCell, typeOneCell, typeTwoCell, amountCell, descriptionCell, writerCell);
+  ledgerTable.append(tableRow);
 }
 
 //비용, 수익 여부에 따라 글자 색상 부여하는 함수
@@ -243,6 +281,7 @@ logOut.addEventListener('click', async () => {
     if (error) {
       throw new Error(error);
     }
+    sessionStorage.removeItem('currentLedgerId');
     location.href = './signIn.html';
   } catch (error) {
     alert(error);

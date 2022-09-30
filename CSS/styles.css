@@ -10443,24 +10443,27 @@ main .btnArea .button {
   border-radius: 20px;
   border-style: none;
 }
-main table {
-  width: 70%;
+main .tables {
+  width: 80%;
 }
-main table tr th {
+main .tables tr {
+  height: 50px;
+}
+main .tables tr th {
   font-weight: 900;
   text-align: center;
 }
-main table tr td ~ .amount {
+main .tables tr td ~ .amount {
   text-align: right;
 }
-main table tr td ~ .description {
-  width: 40%;
+main .tables tr td ~ .description {
+  width: 30%;
   text-align: center;
 }
-main table tr td ~ .delete {
-  margin: 10px 0 0 10px;
+main .tables tr td ~ .writer {
+  text-align: center;
 }
-main table tr:hover :not(th, span) {
+main .tables tr:hover :not(th, span) {
   background-color: rgba(243, 15, 61, 0.4549019608);
 }
 main .modalOverlay {

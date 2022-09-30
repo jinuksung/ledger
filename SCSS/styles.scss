@@ -47,9 +47,10 @@ main {
     }
   }
 
-  table {
-    width: 70%;
+  .tables {
+    width: 80%;
     tr {
+      height: 50px;
       th {
         font-weight: 900;
         text-align: center;
@@ -60,12 +61,12 @@ main {
           text-align: right;
         }
         & ~ .description {
-          width: 40%;
+          width: 30%;
           text-align: center;
         }
 
-        & ~ .delete {
-          margin: 10px 0 0 10px;
+        & ~ .writer {
+          text-align: center;
         }
       }
       &:hover :not(th, span) {
