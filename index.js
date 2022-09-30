@@ -1,18 +1,33 @@
 import { supabase } from './supabase.js';
 
+const main = document.querySelector('main');
+const ledgerSelectModal = document.querySelector('#ledgerSelectModal');
+const ledgerSelectModalOverlay = document.querySelector('#ledgerSelectModalOverlay');
+const table = document.querySelector('table');
+const registerBtn = document.querySelector('#registerBtn');
+const modalOverlay = document.querySelector('.modalOverlay');
+const registerForm = document.registerForm;
+const dateInput = document.querySelector('#date');
+const amountInput = document.querySelector('#amount');
+const logOut = document.querySelector('#logOut');
+const closeModalBtn = document.querySelector('.closeModal');
+let ledgerId = null;
+let currentUser = null;
+
 loadLedgerList();
 
+//database에서 로그인한 사용자가 사용 중인 가계부 목록 조회하여 보여주는 함수
 async function loadLedgerList() {
   try {
     const session = await supabase.auth.session();
     console.log('session :', session);
     console.log('session.user.email :', session.user.email);
-    const userEmail = session.user.email;
-    const user1 = await supabase.from('ledger_list').select('id, ledger_name, user1, created_at').eq('user1', userEmail);
-    const user2 = await supabase.from('ledger_list').select('id, ledger_name, user2, created_at').eq('user2', userEmail);
-    const user3 = await supabase.from('ledger_list').select('id, ledger_name, user3, created_at').eq('user3', userEmail);
-    const user4 = await supabase.from('ledger_list').select('id, ledger_name, user4, created_at').eq('user4', userEmail);
-    const user5 = await supabase.from('ledger_list').select('id, ledger_name, user5, created_at').eq('user5', userEmail);
+    currentUser = session.user.email;
+    const user1 = await supabase.from('ledger_list').select('id, ledger_name, user1, created_at').eq('user1', currentUser);
+    const user2 = await supabase.from('ledger_list').select('id, ledger_name, user2, created_at').eq('user2', currentUser);
+    const user3 = await supabase.from('ledger_list').select('id, ledger_name, user3, created_at').eq('user3', currentUser);
+    const user4 = await supabase.from('ledger_list').select('id, ledger_name, user4, created_at').eq('user4', currentUser);
+    const user5 = await supabase.from('ledger_list').select('id, ledger_name, user5, created_at').eq('user5', currentUser);
     Promise.all([user1, user2, user3, user4, user5])
       .then((results) => {
         console.log('results :', results);
@@ -35,7 +50,6 @@ async function loadLedgerList() {
       .then((ledger) => {
         console.log('ledger :', ledger);
         ledger.forEach((ledgerCell) => {
-          // console.log(Object.keys(ledgerCell)[2]);
           if (Object.keys(ledgerCell)[2] === 'user1') {
             ledgerCell.userType = '생성자';
           } else if (Object.keys(ledgerCell)[2] != 'user1') {
@@ -54,7 +68,7 @@ async function loadLedgerList() {
         const th3 = document.createElement('th');
         ledgerSelectTable.addEventListener('click', function (e) {
           const { target } = e;
-          const ledgerId = target.parentElement.firstElementChild.textContent;
+          ledgerId = target.parentElement.firstElementChild.textContent;
           ledgerSelectModal.classList.add('hidden');
           ledgerSelectModalOverlay.classList.add('hidden');
           fetchData(ledgerId);
@@ -82,22 +96,9 @@ async function loadLedgerList() {
         ledgerSelectModal.insertAdjacentElement('beforeend', ledgerSelectTable);
       });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
-
-const main = document.querySelector('main');
-const ledgerSelectModal = document.querySelector('#ledgerSelectModal');
-const ledgerSelectModalOverlay = document.querySelector('#ledgerSelectModalOverlay');
-const table = document.querySelector('table');
-const registerBtn = document.querySelector('#registerBtn');
-const modalOverlay = document.querySelector('.modalOverlay');
-const modal = document.querySelector('.modals');
-const registerForm = document.registerForm;
-const dateInput = document.querySelector('#date');
-const amountInput = document.querySelector('#amount');
-const logOut = document.querySelector('#logOut');
-const closeModalBtn = document.querySelector('.closeModal');
 
 //내역 등록하기 버튼 클릭 시 registerModal 실행 및 날짜 기본값 오늘 날짜로 세팅
 registerBtn.addEventListener('click', function () {
@@ -105,7 +106,7 @@ registerBtn.addEventListener('click', function () {
   //따라서 offset을 반영해줘야 함
   const offSet = new Date().getTimezoneOffset() * 60000;
   modalOverlay.classList.remove('hidden');
-  modal.classList.remove('hidden');
+  registerForm.classList.remove('hidden');
   document.body.style.overflowY = 'hidden';
   dateInput.value = new Date(Date.now() - offSet).toISOString().substring(0, 10);
 });
@@ -124,10 +125,9 @@ amountInput.addEventListener('keyup', function (e) {
 });
 
 //Modals에서 닫기버튼 누르면 창 닫힘
-
 closeModalBtn.addEventListener('click', function () {
   modalOverlay.classList.add('hidden');
-  modal.classList.add('hidden');
+  registerForm.classList.add('hidden');
   document.body.style.overflowY = 'scroll';
 });
 
@@ -149,19 +149,21 @@ async function submitForm(e) {
     typeTwo: target[3].value,
     amount: Number(target[4].value.replaceAll(',', '')),
     description: target[5].value,
+    ledger_id: ledgerId,
+    writer: currentUser,
   };
   //supabase database에 내역 등록하는 함수
   registerData(newLedger);
   //modal 항목들의 기본값 초기화
-  modal[0].value = '';
-  modal[1].value = '';
-  modal[2].value = '';
-  modal[3].value = '';
-  modal[4].value = '';
-  modal[5].value = '';
+  registerForm[0].value = '';
+  registerForm[1].value = '';
+  registerForm[2].value = '';
+  registerForm[3].value = '';
+  registerForm[4].value = '';
+  registerForm[5].value = '';
   //modal hidden 처리 및 scroll lock 해제
   modalOverlay.classList.add('hidden');
-  modal.classList.add('hidden');
+  registerForm.classList.add('hidden');
   document.body.style.overflowY = 'scroll';
 }
 
