@@ -206,6 +206,7 @@ async function fetchData(ledgerId) {
           <th>금액</th>
           <th>내용</th>
           <th>작성자</th>
+          <th>삭제/수정</th>
         </tr>
       `;
       // const tableRow = data.map((datum) => ledgerLoad(datum)).join('');

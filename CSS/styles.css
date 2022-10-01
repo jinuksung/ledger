@@ -10453,6 +10453,9 @@ main .tables tr th {
   font-weight: 900;
   text-align: center;
 }
+main .tables tr td {
+  vertical-align: middle;
+}
 main .tables tr td ~ .amount {
   text-align: right;
 }
@@ -10862,7 +10865,7 @@ body {
 }
 
 a {
-  color: #fa7c91;
+  color: hsl(229deg, 53%, 53%);
   cursor: pointer;
   text-decoration: none;
 }
@@ -12108,6 +12111,26 @@ table th {
 @media screen and (min-width: 1024px) {
   .container {
     max-width: 960px;
+  }
+}
+@media screen and (max-width: 1215px) {
+  .container.is-widescreen:not(.is-max-desktop) {
+    max-width: 1152px;
+  }
+}
+@media screen and (max-width: 1407px) {
+  .container.is-fullhd:not(.is-max-desktop):not(.is-max-widescreen) {
+    max-width: 1344px;
+  }
+}
+@media screen and (min-width: 1216px) {
+  .container:not(.is-max-desktop) {
+    max-width: 1152px;
+  }
+}
+@media screen and (min-width: 1408px) {
+  .container:not(.is-max-desktop):not(.is-max-widescreen) {
+    max-width: 1344px;
   }
 }
 
