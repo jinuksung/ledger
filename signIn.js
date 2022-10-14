@@ -26,10 +26,10 @@ signInForm.addEventListener('submit', async (e) => {
   } catch (error) {
     console.log(error);
     errorMessage = `
-    <div class="notification is-danger is-light">
+    <div class="notification">
     <p>Error</p>
     <span>${error.message}</span>
   </div>`;
-    signInForm.insertAdjacentHTML('beforeend', errorMessage);
+    signInForm.insertAdjacentHTML('afterend', errorMessage);
   }
 });

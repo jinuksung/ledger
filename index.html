@@ -10,11 +10,11 @@
   <body>
     <header>
       <ul>
-        <li>a</li>
-        <li>b</li>
-        <li>c</li>
+        <li><a href="./index.html">가계부 가기</a></li>
+        <li>실적 분석</li>
+        <li><a href="./myPage.html">My Page</a></li>
+        <li class="logOut"><a href="#">로그아웃</a></li>
       </ul>
-      <button type="button" id="logOut">로그아웃</button>
     </header>
     <main>
       <!-- ledger 선택 팝업 -->
@@ -75,5 +75,23 @@
 
     <script type="module" src="./index.js"></script>
     <script type="module" src=" ./supabase.js"></script>
+    <!-- <script>
+      window.addEventListener('load', function () {
+        const allElements = document.getElementsByTagName('*');
+        Array.prototype.forEach.call(allElements, function (el) {
+          const includePath = el.dataset.includePath;
+          if (includePath) {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+              if (this.readyState == 4 && this.status == 200) {
+                el.outerHTML = this.responseText;
+              }
+            };
+            xhttp.open('GET', includePath, true);
+            xhttp.send();
+          }
+        });
+      });
+    </script> -->
   </body>
 </html>

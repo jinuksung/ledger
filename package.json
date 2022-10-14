@@ -7,9 +7,6 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "bulma": "^0.9.4"
-  },
   "dependencies": {
     "@supabase/supabase-js": "^1.35.6",
     "sass": "^1.54.9"

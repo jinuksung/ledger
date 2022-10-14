@@ -1,6 +1,6 @@
 import { supabase } from './supabase.js';
+import { logOut } from './auth.js';
 
-const main = document.querySelector('main');
 const ledgerSelectModal = document.querySelector('#ledgerSelectModal');
 const ledgerTable = document.querySelector('#ledgerTable');
 const registerBtn = document.querySelector('#registerBtn');
@@ -8,17 +8,20 @@ const modalOverlay = document.querySelector('.modalOverlay');
 const registerForm = document.registerForm;
 const dateInput = document.querySelector('#date');
 const amountInput = document.querySelector('#amount');
-const logOut = document.querySelector('#logOut');
+const logOutBtn = document.querySelector('.logOut');
 const closeModalBtn = document.querySelector('.closeModal');
 let ledgerId = null;
 let currentUser = null;
 
-console.log(JSON.parse(localStorage.getItem('supabase.auth.token')));
-
+//처음에 fetchData 수행 시 sessionStorage에 현재 가계부 ID를 저장해놓음.
+//페이지 새로고침 될 때마다 sessionStoarge에 현재 가계부 ID가 있는지 확인함.
+//ID가 있으면 해당 ID로 계속 불러오고, 없으면 가계부 선택하는 모달 뜸.
 if (!sessionStorage.currentLedgerId) {
   loadLedgerList();
+  console.log('there is no token');
 } else {
   fetchData(sessionStorage.currentLedgerId);
+  console.log('there is a token');
 }
 
 //database에서 로그인한 사용자가 사용 중인 가계부 목록 조회하여 보여주는 함수
@@ -276,15 +279,6 @@ function revenueOrCost(a, b) {
 }
 
 //로그아웃 함수
-logOut.addEventListener('click', async () => {
-  try {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      throw new Error(error);
-    }
-    sessionStorage.removeItem('currentLedgerId');
-    location.href = './signIn.html';
-  } catch (error) {
-    alert(error);
-  }
-});
+// logOutBtn.addEventListener('click', () => {
+//   logOut();
+// });

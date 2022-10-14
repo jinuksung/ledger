@@ -10,43 +10,20 @@
   <body>
     <header>가계뿌</header>
     <main>
-      <form id="signInForm" name="signInForm">
+      <form id="signInForm" name="signInForm" class="box">
         <div class="field">
           <label for="email" class="email">Email</label>
-          <div class="control">
-            <input class="input" type="email" name="email" />
-          </div>
+          <input class="input" type="email" name="email" />
         </div>
         <div class="field">
           <label for="password" class="password">Password</label>
-          <div class="control">
-            <input class="input" type="password" name="password" />
-          </div>
+          <input class="input" type="password" name="password" />
         </div>
-        <button type="submit" class="button is-primary is-hovered">Log In</button>
+        <button type="submit">Sign In</button>
       </form>
-      <form id="signUpForm" class="hidden" name="signUpForm">
-        <div class="field">
-          <label for="email" class="email">Email</label>
-          <div class="control">
-            <input class="input" type="email" name="email" />
-          </div>
-        </div>
-        <div class="field">
-          <label for="password" class="password">Password</label>
-          <div class="control">
-            <input class="input" type="password" name="password" />
-          </div>
-        </div>
-        <div class="field">
-          <label for="confirmPassword" class="password">Confirm Password</label>
-          <div class="control">
-            <input class="input" type="password" name="confirmPassword" />
-          </div>
-        </div>
-        <button type="submit" class="button is-primary is-hovered">Register</button>
-      </form>
-      <a href="./signUp.html"><span>Create New Account With Email</span></a>
+      <div class="box">
+        <a href="./signUp.html"><span>Create New Account With Email</span></a>
+      </div>
     </main>
   </body>
   <script type="module" src=" ./signIn.js"></script>

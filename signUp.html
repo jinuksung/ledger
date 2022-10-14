@@ -10,28 +10,27 @@
   <body>
     <header>가계뿌</header>
     <main>
-      <form id="signUpForm" name="signUpForm">
+      <form id="signUpForm" name="signUpForm" class="box">
         <div class="field">
           <label for="email" class="email">Email</label>
-          <div class="control">
-            <input class="input" type="email" name="email" />
-          </div>
+
+          <input class="input" type="email" name="email" />
         </div>
         <div class="field">
           <label for="password" class="password">Password</label>
-          <div class="control">
-            <input class="input" id="password" type="password" name="password" />
-          </div>
+
+          <input class="input" id="password" type="password" name="password" />
         </div>
         <div class="field">
           <label for="confirmPassword" class="password">Confirm Password</label>
-          <div class="control">
-            <input class="input" id="confirmPassword" type="password" name="confirmPassword" />
-          </div>
+
+          <input class="input" id="confirmPassword" type="password" name="confirmPassword" />
         </div>
-        <button type="submit" class="button is-primary is-hovered">Register</button>
+        <button type="submit">Register</button>
       </form>
-      <a href="./signIn.html"><span>Go back to Login</span></a>
+      <div class="box">
+        <a href="./signIn.html"><span>Go back to Login</span></a>
+      </div>
     </main>
   </body>
   <script type="module" src=" ./signUp.js"></script>
