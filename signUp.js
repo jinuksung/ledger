@@ -5,6 +5,8 @@ const passwordInput = document.querySelector('#password');
 const confirmPasswordInput = document.querySelector('#confirmPassword');
 let errorMessage = '';
 
+console.dir(signUpForm);
+
 checkPassword();
 
 signUpForm.addEventListener('submit', signUp);
@@ -69,10 +71,10 @@ async function signUp(e) {
   } catch (error) {
     console.log(error);
     errorMessage = `
-    <div class="notification is-danger is-light">
+    <div class="notification">
     <p>Error</p>
     <span>${error.message}</span>
   </div>`;
-    signUpForm.insertAdjacentHTML('beforeend', errorMessage);
+    signUpForm.insertAdjacentHTML('afterend', errorMessage);
   }
 }

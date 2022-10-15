@@ -13,18 +13,17 @@
       <form id="signUpForm" name="signUpForm" class="box">
         <div class="field">
           <label for="email" class="email">Email</label>
-
           <input class="input" type="email" name="email" />
         </div>
         <div class="field">
           <label for="password" class="password">Password</label>
-
-          <input class="input" id="password" type="password" name="password" />
+          <!-- 자동완성을 막기 위해 type="password" 대신 style 속성 사용함 -->
+          <input class="input" id="password" style="-webkit-text-security: disc" name="password" />
         </div>
         <div class="field">
           <label for="confirmPassword" class="password">Confirm Password</label>
-
-          <input class="input" id="confirmPassword" type="password" name="confirmPassword" />
+          <!-- 자동완성을 막기 위해 type="password" 대신 style 속성 사용함 -->
+          <input class="input" id="confirmPassword" style="-webit-text-security: disc" name="confirmPassword" />
         </div>
         <button type="submit">Register</button>
       </form>
