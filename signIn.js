@@ -12,7 +12,7 @@ signInForm.addEventListener('submit', async (e) => {
     if (errorNotification != null) {
       errorNotification.remove();
     }
-    const { user, session, error } = await supabase.auth.signIn({
+    const { user, session, error } = await supabase.auth.signInWithPassword({
       email: target[0].value,
       password: target[1].value,
     });

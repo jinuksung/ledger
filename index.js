@@ -27,10 +27,10 @@ if (!sessionStorage.currentLedgerId) {
 //database에서 로그인한 사용자가 사용 중인 가계부 목록 조회하여 보여주는 함수
 async function loadLedgerList() {
   try {
-    const session = await supabase.auth.session();
+    const session = await supabase.auth.getSession();
     console.log('session :', session);
-    console.log('session.user.email :', session.user.email);
-    currentUser = session.user.email;
+    console.log('session.user.email :', session.data.session.user.email);
+    currentUser = session.data.session.user.email;
     const user1 = await supabase.from('ledger_list').select('id, ledger_name, user1, created_at').eq('user1', currentUser);
     const user2 = await supabase.from('ledger_list').select('id, ledger_name, user2, created_at').eq('user2', currentUser);
     const user3 = await supabase.from('ledger_list').select('id, ledger_name, user3, created_at').eq('user3', currentUser);
@@ -39,7 +39,7 @@ async function loadLedgerList() {
     Promise.all([user1, user2, user3, user4, user5])
       .then((results) => {
         console.log('results :', results);
-        const ledgerListArray = results.filter((result) => result.body.length > 0);
+        const ledgerListArray = results.filter((result) => result.data.length > 0);
         if (ledgerListArray.length > 0) {
           return ledgerListArray;
         } else {
@@ -51,7 +51,7 @@ async function loadLedgerList() {
         let ledger = [];
         console.log('ledgerList :', ledgerListArray);
         ledgerListArray.forEach((ledgerList) => {
-          ledger.push(...ledgerList.body);
+          ledger.push(...ledgerList.data);
           ledger.sort(function (a, b) {
             return a.id - b.id;
           });
@@ -212,23 +212,9 @@ async function fetchData(ledgerId) {
           <th>삭제/수정</th>
         </tr>
       `;
-      // const tableRow = data.map((datum) => ledgerLoad(datum)).join('');
-      // const tableRow = data
-      //   .map(
-      //     (datum) =>
-      //       `<tr id="${datum.id}">
-      //     <td>${datum.date.slice(5, 7)}/${datum.date.slice(8, 10)}</td>
-      //     <td>${datum.account}</td>
-      //     <td>${datum.typeOne}</td>
-      //     <td>${datum.typeTwo}</td>
-      //     <td>${datum.amount}</td>
-      //     <td>${datum.description}</td>
-      //     <td>${datum.writer}</td>
-      //   </tr>`
-      //   )
-      //   .join('');
+
       ledgerTable.insertAdjacentHTML('afterbegin', tableHeader);
-      data.forEach((datum) => ledgerLoad(datum));
+      // data.forEach((datum) => ledgerLoad(datum));
     } else if (error) {
       const { message } = error;
       throw new Error(message);
