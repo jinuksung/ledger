@@ -10,6 +10,8 @@ const dateInput = document.querySelector('#date');
 const amountInput = document.querySelector('#amount');
 const logOutBtn = document.querySelector('.logOut');
 const closeModalBtn = document.querySelector('.closeModal');
+const accountType = document.querySelector('#accountType');
+const accountName = document.querySelector('#accountName');
 let ledgerId = null;
 let currentUser = null;
 
@@ -123,6 +125,22 @@ registerBtn.addEventListener('click', function () {
   registerForm.classList.remove('hidden');
   document.body.style.overflowY = 'hidden';
   dateInput.value = new Date(Date.now() - offSet).toISOString().substring(0, 10);
+  let accountTypeArray = '';
+  accountTypeLoad().then((results) => {
+    accountTypeArray = results;
+    console.log('accountTypeArray :', accountTypeArray);
+    results.forEach((result) => {
+      const option = `<option value="${result}">${result}</option>`;
+      accountType.insertAdjacentHTML('beforeend', option);
+    });
+  });
+  accountNameLoad('포인트').then((results) => {
+    console.log(results);
+    results.forEach((result) => {
+      const option = `<option value="${result.account_name}">${result.account_name}</option>`;
+      accountName.insertAdjacentHTML('beforeend', option);
+    });
+  });
 });
 
 //registerModal에서 금액 입력 시 컴마 적용해줌
@@ -136,6 +154,17 @@ amountInput.addEventListener('keyup', function (e) {
   } else {
     amountInput.value = value.toLocaleString('KO-KR');
   }
+});
+//accounttype이 바뀔 때마다 accountname의 목록들도 바꿔주는 함수
+//바뀔 때마다 목록 초기화되고 바꿔져야 함(지금은 바꿀 때마다 초기화 안되고 계속 뒤에 붙기만 함)
+accountType.addEventListener('change', function (e) {
+  const { target } = e;
+  accountNameLoad(`${target.value}`).then((results) => {
+    results.forEach((result) => {
+      const option = `<option value="${result.account_name}">${result.account_name}</option>`;
+      accountName.insertAdjacentHTML('beforeend', option);
+    });
+  });
 });
 
 //Modals에서 닫기버튼 누르면 창 닫힘
@@ -197,7 +226,25 @@ async function registerData(ledgerData) {
 
 async function fetchData(ledgerId) {
   try {
-    const { data, error } = await supabase.from('ledger_detail').select('*').eq('ledger_id', ledgerId);
+    const { data, error } = await supabase
+      .from('ledger_detail3')
+      .select(
+        `
+      id,
+      date,
+      account_list (
+        account_type,
+        account_name
+      ),
+      revenue_cost_list (
+        level_one,
+        level_two
+      ),
+      description,
+      amount
+      `
+      )
+      .eq('ledger_id', ledgerId);
     if (data) {
       console.log('data:', data);
       const tableHeader = `
@@ -212,12 +259,10 @@ async function fetchData(ledgerId) {
           <th>삭제/수정</th>
         </tr>
       `;
-
       ledgerTable.insertAdjacentHTML('afterbegin', tableHeader);
-      // data.forEach((datum) => ledgerLoad(datum));
+      data.forEach((datum) => ledgerLoad(datum));
     } else if (error) {
-      const { message } = error;
-      throw new Error(message);
+      throw new Error(error);
     }
   } catch (e) {
     console.error(e);
@@ -226,45 +271,65 @@ async function fetchData(ledgerId) {
 
 //모델에서 데이터 불러와서 화면에 뿌려주는 함수
 function ledgerLoad(data) {
-  const { id, date, account, typeOne, typeTwo, description, amount, writer } = data;
-  const tableRow = document.createElement('tr');
-  const dateCell = document.createElement('td');
-  const accountCell = document.createElement('td');
-  const typeOneCell = document.createElement('td');
-  const typeTwoCell = document.createElement('td');
-  const amountCell = document.createElement('td');
-  const descriptionCell = document.createElement('td');
-  const writerCell = document.createElement('td');
-  tableRow.className = id;
-  amountCell.classList.add('amount');
-  descriptionCell.classList.add('description');
-  writerCell.classList.add('writer');
-  dateCell.textContent = `${date.slice(5, 7)}/${date.slice(8, 10)}`;
-  accountCell.textContent = account;
-  typeOneCell.textContent = typeOne;
-  typeTwoCell.textContent = typeTwo;
-  amountCell.textContent = amount.toLocaleString('KO-KR');
-  descriptionCell.textContent = description;
-  writerCell.textContent = writer;
-
-  revenueOrCost(amountCell, typeOneCell);
-
-  tableRow.append(dateCell, accountCell, typeOneCell, typeTwoCell, amountCell, descriptionCell, writerCell);
-  ledgerTable.append(tableRow);
-}
-
-//비용, 수익 여부에 따라 글자 색상 부여하는 함수
-function revenueOrCost(a, b) {
-  if (b.textContent === '비용') {
-    a.classList.add('cost');
-    b.classList.add('cost');
-  } else if (b.textContent === '수익') {
-    a.classList.add('revenue');
-    b.classList.add('revenue');
+  const { id, date, description, amount, account_list, revenue_cost_list } = data;
+  let ledgerCell = '';
+  if ((revenue_cost_list.level_one = '비용')) {
+    ledgerCell = `
+  <tr class=${id}>
+  <td>${date.slice(5, 7)}/${date.slice(8, 10)}</td>
+  <td>${account_list.account_type} ${account_list.account_name}</td>
+  <td class="cost">${revenue_cost_list.level_one}</td>
+  <td class="cost">${revenue_cost_list.level_two}</td>
+  <td class="cost">${amount.toLocaleString('KO-KR')}</td>
+  <td>${description}</td>
+  <td class="writer"></td>
+  <td class="edit"></td>
+  </tr>
+  `;
+  } else if ((revenue_cost_list.level_one = '수익')) {
+    ledgerCell = `
+    <tr class=${id}>
+    <td>${date.slice(5, 7)}/${date.slice(8, 10)}</td>
+    <td>${account_list.account_type} ${account_list.account_name}</td>
+    <td class="revenue">${revenue_cost_list.level_one}</td>
+    <td class="revenue">${revenue_cost_list.level_two}</td>
+    <td class="revenue">${amount.toLocaleString('KO-KR')}</td>
+    <td>${description}</td>
+    <td class="writer"></td>
+    <td class="edit"></td>
+    </tr>
+    `;
   }
+  ledgerTable.insertAdjacentHTML('beforeend', ledgerCell);
 }
 
 //로그아웃 함수
 // logOutBtn.addEventListener('click', () => {
 //   logOut();
 // });
+
+async function accountTypeLoad() {
+  try {
+    const { data, error } = await supabase.rpc('accounttypeload');
+    if (data) {
+      return data;
+    } else if (error) {
+      throw new Error(error);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function accountNameLoad(accountType) {
+  try {
+    const { data, error } = await supabase.from('account_list').select('account_type, account_name').eq('account_type', `${accountType}`);
+    if (data) {
+      return data;
+    } else if (error) {
+      throw new Error(error);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
